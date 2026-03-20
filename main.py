@@ -24,10 +24,11 @@ class DebugTokenAddOn(AddOn):
 
         # Sleep to give you time to inspect logs
         # print("Sleeping for 360 seconds to inspect token refresh logic...")
-        # time.sleep(360)
+        self.set_message("Test Point 1")
+        time.sleep(360)
 
         # Optionally, try refreshing tokens if a refresh token exists
-        self.set_message("Testing message set")
+        self.set_message("Test Point 2")
 
 if __name__ == "__main__":
     DebugTokenAddOn().main()
