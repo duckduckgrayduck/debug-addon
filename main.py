@@ -27,25 +27,7 @@ class DebugTokenAddOn(AddOn):
         # time.sleep(360)
 
         # Optionally, try refreshing tokens if a refresh token exists
-        if refresh_token:
-            print("\nAttempting manual refresh using refresh token...")
-            try:
-                url = "https://accounts.muckrock.com/api/refresh/"
-                response = requests.post(url, json={"refresh": refresh_token}, timeout=10)
-                print("Manual refresh status code:", response.status_code)
-                try:
-                    data = response.json()
-                    print("Manual refresh response JSON:", data)
-                    # Update client session headers safely if refresh succeeded
-                    if "access" in data:
-                        self.client.access_token = data["access"]
-                        self.client.refresh_token = data["refresh"]
-                        self.client.session.headers["Authorization"] = f"Bearer {data['access']}"
-                        print("Client updated with new access token.")
-                except Exception:
-                    print("Manual refresh response content:", response.content)
-            except Exception as e:
-                print("Manual refresh failed:", e)
+        self.set_message("Testing message set")
 
 if __name__ == "__main__":
     DebugTokenAddOn().main()
