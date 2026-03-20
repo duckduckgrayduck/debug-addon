@@ -26,7 +26,6 @@ class DebugTokenAddOn(AddOn):
         # time.sleep(360)
 
         # Optionally, try refreshing tokens if a refresh token exists
-        """
         if refresh_token:
             print("Attempting manual _set_tokens() refresh...")
             self.client._set_tokens()
@@ -34,7 +33,6 @@ class DebugTokenAddOn(AddOn):
             print("Access Token:", getattr(self.client, "access_token", None))
             print("Refresh Token:", getattr(self.client, "refresh_token", None))
             print("Authorization header:", self.client.session.headers.get("Authorization"))
-        """
         self.set_message("DebugTokenAddOn finished inspection!")
 
 if __name__ == "__main__":
