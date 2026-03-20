@@ -1,53 +1,33 @@
 import time
-import requests
 from documentcloud.addon import AddOn
 
 class DebugTokenAddOn(AddOn):
     """Debug Add-On to inspect DocumentCloud client tokens safely."""
 
     def main(self):
-        # Get client tokens and Authorization header
-        access_token = getattr(self.client, "access_token", None)
-        refresh_token = getattr(self.client, "refresh_token", None)
-        auth_header = self.client.session.headers.get("Authorization")
+        for i in range(1, 8):
+            # Get client tokens and Authorization header
+            access_token = getattr(self.client, "access_token", None)
+            refresh_token = getattr(self.client, "refresh_token", None)
+            auth_header = self.client.session.headers.get("Authorization")
 
-        print("=== Initial Client State ===")
-        print("Access Token:", access_token)
-        print("Refresh Token:", refresh_token)
-        print("Authorization header:", auth_header)
+            print(f"=== Client State Before Call {i} ===")
+            print("Access Token:", access_token)
+            print("Refresh Token:", refresh_token)
+            print("Authorization header:", auth_header)
 
-        # Warn if no tokens
-        if not refresh_token:
-            print("Warning: No refresh token set!")
-        if not access_token:
-            print("Warning: No access token set!")
+            if not refresh_token:
+                print("Warning: No refresh token set!")
+            if not access_token:
+                print("Warning: No access token set!")
 
-        # Sleep to give you time to inspect logs
-        # print("Sleeping for 360 seconds to inspect token refresh logic...")
-        self.set_message("Test Point 1")
+            # Set a message
+            self.set_message(f"Test Point {i}")
 
-        access_token = getattr(self.client, "access_token", None)
-        refresh_token = getattr(self.client, "refresh_token", None)
-        auth_header = self.client.session.headers.get("Authorization")
+            print(f"=== Message {i} sent, sleeping 60s ===")
+            time.sleep(60)  # sleep for 60 seconds between each message
 
-        print("=== Client State After 1st Call ===")
-        print("Access Token:", access_token)
-        print("Refresh Token:", refresh_token)
-        print("Authorization header:", auth_header)
-
-        # Warn if no tokens
-        if not refresh_token:
-            print("Warning: No refresh token set!")
-        if not access_token:
-            print("Warning: No access token set!")
-
-
-
-
-        # time.sleep(360)
-
-        # Optionally, try refreshing tokens if a refresh token exists
-        # self.set_message("Test Point 2")
+        print("Finished sending 7 messages at 1-minute intervals.")
 
 if __name__ == "__main__":
     DebugTokenAddOn().main()
