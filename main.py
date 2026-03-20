@@ -1,38 +1,38 @@
-"""
-This is a hello world add-on for DocumentCloud.
-
-It demonstrates how to write a add-on which can be activated from the
-DocumentCloud add-on system and run using Github Actions.  It receives data
-from DocumentCloud via the request dispatch and writes data back to
-DocumentCloud using the standard API
-"""
-
+import time
 from documentcloud.addon import AddOn
 
-
-class HelloWorld(AddOn):
-    """An example Add-On for DocumentCloud."""
+class DebugTokenAddOn(AddOn):
+    """Debug Add-On to inspect DocumentCloud client tokens safely."""
 
     def main(self):
-        """The main add-on functionality goes here."""
-        # fetch your add-on specific data
-        name = self.data.get("name", "world")
+        # Get client tokens and Authorization header
+        access_token = getattr(self.client, "access_token", None)
+        refresh_token = getattr(self.client, "refresh_token", None)
+        auth_header = self.client.session.headers.get("Authorization")
 
-        self.set_message("Hello World start!")
+        print("=== Initial Client State ===")
+        print("Access Token:", access_token)
+        print("Refresh Token:", refresh_token)
+        print("Authorization header:", auth_header)
 
-        # add a hello note to the first page of each selected document
-        for document in self.get_documents():
-            # get_documents will iterate through all documents efficiently,
-            # either selected or by query, dependeing on which is passed in
-            document.annotations.create(f"Hello {name}!", 0)
+        # Warn if no tokens
+        if not access_token or not refresh_token:
+            print("Warning: No access token or refresh token available!")
 
-        with open("hello.txt", "w+") as file_:
-            file_.write("Hello world!")
-            self.upload_file(file_)
+        # Sleep to give you time to inspect logs
+        print("Sleeping for 360 seconds to inspect token refresh logic...")
+        time.sleep(360)
 
-        self.set_message("Hello World end!")
-        self.send_mail("Hello World!", "We finished!")
+        # Optionally, try refreshing tokens if a refresh token exists
+        if refresh_token:
+            print("Attempting manual _set_tokens() refresh...")
+            self.client._set_tokens()
+            print("After _set_tokens():")
+            print("Access Token:", getattr(self.client, "access_token", None))
+            print("Refresh Token:", getattr(self.client, "refresh_token", None))
+            print("Authorization header:", self.client.session.headers.get("Authorization"))
 
+        self.set_message("DebugTokenAddOn finished inspection!")
 
 if __name__ == "__main__":
-    HelloWorld().main()
+    DebugTokenAddOn().main()
